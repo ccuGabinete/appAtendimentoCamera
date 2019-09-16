@@ -1,0 +1,92 @@
+<div class="unicorn-dark-theme">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>ATENDIMENTO</span>
+      <mat-icon matTooltip="logout" (click)="onLogout()"> directions_run</mat-icon>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <img [src]="link" style="width: 2em; height: 2em; transform: rotate(270deg); margin-right: 1em">
+  <a class="navbar-brand" href="" style="color: teal; font-size: 1em;">{{usuario}}</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input matTooltip="Número do documento fornecido" [(ngModel)]="documento.numero"
+        [ngModelOptions]="{standalone: true}" class="form-control mr-sm-2" type="search" placeholder="documento"
+        aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="button" (click)="openSource()">Buscar</button>
+    </form>
+  </div>
+</nav>
+
+<div class='camera'>
+  <div *ngIf='!fotografado' class='captuar'>
+    <webcam [height]='200' [width]='200' [trigger]='triggerObservable' (imageCapture)='handleImage($event)'
+      *ngIf='showWebcam' [allowCameraSwitch]='allowCameraSwitch' [videoOptions]='videoOptions' [imageQuality]='1'
+      (initError)='handleInitError($event)'></webcam>
+  </div>
+
+  <div *ngIf='fotografado' class='repetir'>
+    <div class='snapshot' *ngIf='webcamImage'>
+      <img [src]='webcamImage.imageAsDataUrl' id='fotografado'/>
+    </div>
+  </div>
+
+  <div class='toogle'>
+    <button type="button" class="btn btn-dark btn-lg btn-block" (click)='triggerSnapshot();'>{{toogle}}</button>
+  </div>
+</div>
+
+<h4 *ngIf='errors.length > 0'>Messages:</h4>
+<ul *ngFor='let error of errors'>
+  <li>{{error | json}}</li>
+</ul>
+
+<div class="alinhamentoItens">
+  <div class="unicorn-dark-theme">
+    <mat-form-field>
+      <input matInput type="text" placeholder="Nome" name="nome" id="nome" [(ngModel)]="nome">
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="unicorn-dark-theme">
+      <mat-label>Setor</mat-label>
+      <mat-select color="primary" [(ngModel)]="cadastro.destino">
+        <mat-option *ngFor="let setor of setores" [value]="setor">
+          {{setor}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="unicorn-dark-theme">
+      <mat-label>Documento</mat-label>
+      <mat-select [(ngModel)]="cadastro.documento" class="example-select">
+        <mat-option *ngFor="let docs of documentos" [value]="docs">
+          {{docs}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="unicorn-dark-theme">
+    <mat-form-field>
+      <input matInput type="text" placeholder="Número" name="numero" id="numero" [(ngModel)]="cadastro.numero"
+        (change)="changeEvent($event)">
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="toogle">
+    <button type="button" class="btn btn-dark btn-lg btn-block" (click)="onSubmit()" #submitButton>Salvar</button>
+</div>
